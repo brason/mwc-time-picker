@@ -15,6 +15,8 @@ class TimePicker extends LitElement {
             _hour: {type: Number},
             _minute: {type: Number},
             _step: {type: Number},
+            _amSelected: {type: Boolean},
+
             ampm: {type: Boolean}
         }
     }
@@ -25,6 +27,7 @@ class TimePicker extends LitElement {
         this._hour = 0;
         this._minute = 0;
         this._step = 0;
+        this._amSelected = true;
         this.ampm = false;
     }
 
@@ -48,7 +51,7 @@ class TimePicker extends LitElement {
 
     _onConfirm() {
         this._open = false;
-        this._resolve(`${_pad(this._hour)}:${_pad(this._minute)}`);
+        this._resolve(`${_pad(this._hour)}:${_pad(this._minute)}${this.ampm ? (this._amSelected ? ' AM' : ' PM') : ''}`);
     }
 
     _updateClock(e) {
@@ -105,8 +108,12 @@ class TimePicker extends LitElement {
         this._step = step;
     }
 
+    _setAM(am) {
+        this._amSelected = am;
+    }
+
     render() {
-        const {_open, _hour, _minute, _step, ampm} = this;
+        const {_open, _hour, _minute, _step, _amSelected, ampm} = this;
 
         const numberPos = _step === 0 ? hourPos : minutePos;
         const selectedNum = _step === 0 ? _hour : _minute;
@@ -150,11 +157,32 @@ class TimePicker extends LitElement {
                     align-items: center;
                     justify-content: center;
                     font-size: 55px;
+                    color: rgba(255, 255, 255, 0.54);
+                }
+                
+                .hour, .minute, .am, .pm  {
+                    cursor: pointer;
+                }
+                
+                #time-picker.hour-selected .hour {
                     color: white;
                 }
                 
-                .digital-clock > .number {
-                    cursor: pointer;
+                #time-picker.minute-selected .minute {
+                    color: white;
+                }
+                
+                .digital-clock > .ampm-selectors {
+                    margin-left: 20px;
+                    font-size: 18px;
+                }
+                
+                #time-picker.am-selected .am {
+                    color: white;
+                }
+                
+                #time-picker.pm-selected .pm {
+                    color: white;
                 }
                 
                 .analog-clock-container {
@@ -194,13 +222,29 @@ class TimePicker extends LitElement {
                     align-items: center;
                 }
             </style>
-            <div id='time-picker' class='${classMap({open: _open})}'>
+            <div 
+                id='time-picker' 
+                class='${classMap({
+                    open: _open, 
+                    'hour-selected': _step === 0, 
+                    'minute-selected': _step === 1, 
+                    'am-selected': _amSelected, 
+                    'pm-selected': !_amSelected
+                })}'
+            >
                 <div class='backdrop'>
                     <div class='overlay'>
                         <div class='digital-clock'>
-                            <div class="number" @click="${() => this._setStep(0)}">${_pad(_hour + 1)}</div>
+                            <div class="hour" @click="${() => this._setStep(0)}">${_pad(_hour + 1)}</div>
                             <div>:</div>
-                            <div class="number" @click="${() => this._setStep(1)}">${_pad(_minute)}</div>
+                            <div class="minute" @click="${() => this._setStep(1)}">${_pad(_minute)}</div>
+                            ${ampm ? html`
+                                <div class="ampm-selectors">
+                                    <div class="am" @click="${() => this._setAM(true)}">AM</div>
+                                    <div class="pm" @click="${() => this._setAM(false)}">PM</div>
+                                </div>
+                            ` : ''}
+
                         </div>
                         <div class='analog-clock-container'>
                             <svg 

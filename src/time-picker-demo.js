@@ -28,7 +28,7 @@ class TimePickerDemo extends LitElement {
                 <input @click="${e => this._onInputClick(e)}">
                 <input @click="${e => this._onInputClick(e)}">
                 <input @click="${e => this._onInputClick(e)}">
-                <time-picker .ampm="${false}"></time-picker>
+                <time-picker .ampm="${true}"></time-picker>
             </div>
         `;
     }
