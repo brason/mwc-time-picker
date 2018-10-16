@@ -3,8 +3,12 @@ import {LitElement, html} from '@polymer/lit-element';
 import './time-picker';
 
 class TimePickerDemo extends LitElement {
-    async _onInputClick(e) {
-        e.target.value = await this.shadowRoot.querySelector('time-picker').open();
+    async _onInput1Click(e) {
+        e.target.value = await this.shadowRoot.querySelector('time-picker:not(.ampm)').open();
+    }
+
+    async _onInput2Click(e) {
+        e.target.value = await this.shadowRoot.querySelector('time-picker.ampm').open();
     }
 
     render() {
@@ -25,10 +29,10 @@ class TimePickerDemo extends LitElement {
                 }
             </style>
             <div>
-                <input @click="${e => this._onInputClick(e)}">
-                <input @click="${e => this._onInputClick(e)}">
-                <input @click="${e => this._onInputClick(e)}">
-                <time-picker .ampm="${true}"></time-picker>
+                <input @click="${e => this._onInput1Click(e)}">
+                <input @click="${e => this._onInput2Click(e)}">
+                <time-picker .ampm="${false}"></time-picker>
+                <time-picker class="ampm" .ampm="${true}"></time-picker>
             </div>
         `;
     }
