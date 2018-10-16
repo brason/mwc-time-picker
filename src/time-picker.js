@@ -51,7 +51,7 @@ class TimePicker extends LitElement {
 
     _onConfirm() {
         this._open = false;
-        this._resolve(`${_pad(this._hour)}:${_pad(this._minute)}${this.ampm ? (this._amSelected ? ' AM' : ' PM') : ''}`);
+        this._resolve(`${_pad(this._hour + 1)}:${_pad(this._minute)}${this.ampm ? (this._amSelected ? ' AM' : ' PM') : ''}`);
     }
 
     _updateClock(e) {
